@@ -52,31 +52,36 @@ function setMainScreen(wordToGuess: string) {
             letterContainer.appendChild(letter);
         }
         div.replaceChildren(userGuess, letterContainer);
-        
+
         //Obtain user guesses
         userGuess.addEventListener("keydown", verifyGuess);
     }    
 }
 
 function verifyGuess(e: KeyboardEvent) {
+    const div = document.getElementById("start-div"); 
     const userGuess = document.getElementsByTagName("input").item(0);
-    if (e.key === "Enter" && userGuess !== null) {
+    if (e.key === "Enter" && userGuess !== null && div !== null) {
         if (userGuess.value.length !== 5) {
             alert("The input box should have exactly 5 characters!");
         }
         else {
-            numberOfGuesses += 1;
             const newGuess = document.createElement("p");
             newGuess.textContent = userGuess.value;
-
+            div.appendChild(newGuess);
+            numberOfGuesses += 1;
+        
             if (userGuess.value.toLowerCase() === wordToGuess.toLowerCase()) {
                 alert("You guessed the correct word!");
                 userGuess.removeEventListener("keydown", verifyGuess);
             }
             else if (numberOfGuesses === 6){
-                alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
-                userGuess.removeEventListener("keydown", verifyGuess);
+                setTimeout(() => {
+                    alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
+                    userGuess.removeEventListener("keydown", verifyGuess);
+                }, 400);
             }
+            userGuess.value = "";
         }
     }
 }
