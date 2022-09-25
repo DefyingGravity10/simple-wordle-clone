@@ -47,7 +47,6 @@ function setMainScreen(wordToGuess) {
             letterContainer.appendChild(letter);
         }
         div.replaceChildren(userGuess, letterContainer);
-        console.log(wordToGuess);
         //Obtain user guesses
         userGuess.addEventListener("keydown", verifyGuess);
     }
