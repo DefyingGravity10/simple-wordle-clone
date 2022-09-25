@@ -1,6 +1,7 @@
 const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
 let numberOfGuesses = 0;
 let wordToGuess = "";
+let guess = "";
 
 function startingConfig() {
     const div = document.getElementById("start-div");
@@ -40,7 +41,7 @@ function setMainScreen(wordToGuess: string) {
         const userGuess = document.createElement("input");
         userGuess.classList.add("user-guess");
 
-        const letterDict = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
+        const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
                             "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
                             "u", "v", "w", "x", "y", "z"];
         const letterContainer = document.createElement("div");
@@ -48,7 +49,7 @@ function setMainScreen(wordToGuess: string) {
         for (let i=0; i<26; i++) {
             const letter = document.createElement("span");
             letter.classList.add("letter");
-            letter.textContent = letterDict[i];
+            letter.textContent = letterArr[i];
             letterContainer.appendChild(letter);
         }
         div.replaceChildren(userGuess, letterContainer);
@@ -62,28 +63,49 @@ function verifyGuess(e: KeyboardEvent) {
     const div = document.getElementById("start-div"); 
     const userGuess = document.getElementsByTagName("input").item(0);
     if (e.key === "Enter" && userGuess !== null && div !== null) {
+        guess = userGuess.value.toString();
         if (userGuess.value.length !== 5) {
             alert("The input box should have exactly 5 characters!");
         }
         else {
             const newGuess = document.createElement("p");
-            newGuess.textContent = userGuess.value;
+            const arrNewGuess = [...userGuess.value];
+            arrNewGuess.forEach((letter) => {
+               const l = document.createElement("span"); 
+               l.textContent = letter;
+               newGuess.appendChild(l);
+            });
             div.appendChild(newGuess);
             numberOfGuesses += 1;
         
             if (userGuess.value.toLowerCase() === wordToGuess.toLowerCase()) {
-                alert("You guessed the correct word!");
-                userGuess.removeEventListener("keydown", verifyGuess);
+                setTimeout(() => {
+                    alert("You guessed the correct word!");
+                    userGuess.removeEventListener("keydown", verifyGuess);
+                }, 500);
             }
             else if (numberOfGuesses === 6){
                 setTimeout(() => {
                     alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
                     userGuess.removeEventListener("keydown", verifyGuess);
-                }, 400);
+                }, 500);
             }
             userGuess.value = "";
+            revealHints(wordToGuess, guess, newGuess);
         }
     }
 }
 
+function revealHints(wordToGuess: string, guess: string, para: HTMLParagraphElement) {
+    const paraArray = [...para.children];
+    const arrWordToGuess = [...wordToGuess];
+    for (let i=0; i<5; i++) {
+        if (wordToGuess[i] == guess[i]) {
+            paraArray[i].classList.add("correct");
+        }
+        else if (arrWordToGuess.includes(`${guess[i]}`)) {
+            paraArray[i].classList.add("misplaced");
+        }
+    }
+}
 startingConfig();
