@@ -3,6 +3,9 @@ let numberOfGuesses = 0;
 let wordToGuess = "";
 let guess = "";
 let currWord:string[] = [];
+const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
+                    "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                    "u", "v", "w", "x", "y", "z"];
 
 function startingConfig() {
     const div = document.getElementById("start-div");
@@ -99,8 +102,8 @@ function setMainScreen(wordToGuess: string) {
 }
 
 function registerKey(e: KeyboardEvent) {
-    if (e.key.match(/[a-z]/i) && e.key !== "Enter" && e.key !== "Backspace") {
-        addLettersToScreen(e.key);
+    if (letterArr.includes(e.key.toLowerCase())) {
+        addLettersToScreen(e.key.toLowerCase());
     }
     if (e.key === "Backspace") {
         deleteLetters();
@@ -115,7 +118,7 @@ function registerClick(e: MouseEvent) {
         const elem = e.target as Element;
         const key = elem.getAttribute("id");
         if (key !== null) {
-            if (key.match(/[a-z]/i) && key !== "Enter" && key !== "Backspace") {
+            if (letterArr.includes(key)) {
                 addLettersToScreen(key);
             }
             if (key === "Backspace") {
@@ -127,6 +130,7 @@ function registerClick(e: MouseEvent) {
         }   
     }
 }
+
 function addLettersToScreen(key:string) {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     const currRow = rowContainer[numberOfGuesses];
