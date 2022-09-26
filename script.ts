@@ -167,7 +167,7 @@ function verifyGuess() {
         else {
             if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {
                 setTimeout(() => {
-                    alert("You guessed the correct word!");
+                    alert("Congratulations, you guessed the correct word!");
                     window.removeEventListener("keydown", registerKey);
                     const keyboardContainer = document.getElementById("keyboard-container");
                     if (keyboardContainer !== null) {
@@ -177,7 +177,7 @@ function verifyGuess() {
             }
             else if (numberOfGuesses === 5){
                 setTimeout(() => {
-                    alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
+                    alert(`Game Over. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
                     window.removeEventListener("keydown", registerKey);
                     const keyboardContainer = document.getElementById("keyboard-container");
                     if (keyboardContainer !== null) {
@@ -204,6 +204,9 @@ function revealHints() {
         }
         else if (wordToGuess.includes(`${guess[i]}`)) {
             squares[i].classList.add("misplaced");
+        }
+        else {
+            squares[i].classList.add("incorrect");
         }
     }
 }
