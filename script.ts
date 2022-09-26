@@ -2,6 +2,7 @@ const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5a
 let numberOfGuesses = 0;
 let wordToGuess = "";
 let guess = "";
+let currWord:string[] = [];
 
 function startingConfig() {
     const div = document.getElementById("start-div");
@@ -36,76 +37,146 @@ function startingConfig() {
 
 function setMainScreen(wordToGuess: string) {
     const div = document.getElementById("start-div");
-    if (div !== null) {
-        //Create new screen
-        const userGuess = document.createElement("input");
-        userGuess.classList.add("user-guess");
 
-        const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
-                            "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-                            "u", "v", "w", "x", "y", "z"];
-        const letterContainer = document.createElement("div");
-        letterContainer.classList.add("container");
-        for (let i=0; i<26; i++) {
-            const letter = document.createElement("span");
-            letter.classList.add("letter");
-            letter.textContent = letterArr[i];
-            letterContainer.appendChild(letter);
+    //Create new screen
+    if (div !== null) {
+        const rowContainer = document.createElement("div");
+        rowContainer.classList.add("row-container")
+        for (let i=0; i<6; i++) {
+            const row = document.createElement("div");
+            for (let j=0; j<5; j++) {
+                const square = document.createElement("div");
+                square.classList.add("squares");
+                row.appendChild(square);
+            }
+            row.classList.add("rows");
+            rowContainer.appendChild(row);
         }
-        div.replaceChildren(userGuess, letterContainer);
+        const keyboard1 = ["q", "w", "e", "r", "t", "y", "u", "i","o", "p"];
+        const keyboard2 = ["a", "s", "d", "f", "g", "h","j", "k", "l"];
+        const keyboard3 = ["Backspace", "z", "x", "c", "v", "b", "n", "m", "Enter"];
+
+        const keyboardContainer = document.createElement("div");
+        for (let i=0; i<3; i++) {
+            const keyboardRow = document.createElement("div");
+            if (i===0) {
+                keyboard1.forEach((l) => {
+                    const letter = document.createElement("div");
+                    letter.textContent = l;
+                    letter.classList.add("key");
+                    letter.setAttribute("id", l);
+                    keyboardRow.appendChild(letter);
+                });
+            }
+            if (i===1) {
+                keyboard2.forEach((l) => {
+                    const letter = document.createElement("div");
+                    letter.textContent = l;
+                    letter.classList.add("key");
+                    letter.setAttribute("id", l);
+                    keyboardRow.appendChild(letter);
+                });
+            }
+            if (i===2) {
+                keyboard3.forEach((l) => {
+                    const letter = document.createElement("div");
+                    letter.textContent = l;
+                    letter.classList.add("key");
+                    letter.setAttribute("id", l);
+                    keyboardRow.appendChild(letter);
+                });
+            }
+            keyboardRow.classList.add("keyboard-row");
+            keyboardContainer.appendChild(keyboardRow);
+        }
+        div.replaceChildren(rowContainer, keyboardContainer);
 
         //Obtain user guesses
-        userGuess.addEventListener("keydown", verifyGuess);
+        window.addEventListener("keydown", registerKey);
+        console.log(wordToGuess);
+        //Try to ensure that e can be a click event :>
     }    
 }
 
+function registerKey(e: KeyboardEvent) {
+    if (e.key.match(/[a-z]/i) && e.key !== "Enter" && e.key !== "Backspace") {
+        addLettersToScreen(e);
+    }
+    if (e.key === "Enter") {
+        verifyGuess(e)
+    }
+    if (e.key === "Backspace") {
+        deleteLetters(e);
+    }
+}
+
+function addLettersToScreen(e: KeyboardEvent) {
+    const rowContainer = document.getElementsByClassName("row-container")[0].children;
+    const currRow = rowContainer[numberOfGuesses];
+    const squares = [...currRow.children];
+
+    if (rowContainer !== null) {
+        if (currWord.length < 5) {
+            squares[currWord.length].textContent = e.key;
+            currWord.push(e.key);
+        }   
+    }
+}
+
+function deleteLetters(e: KeyboardEvent) {
+    const rowContainer = document.getElementsByClassName("row-container")[0].children;
+    const currRow = rowContainer[numberOfGuesses];
+    const squares = [...currRow.children];
+
+    if (rowContainer !== null) {
+        if (currWord.length > 0) {
+            squares[currWord.length-1].textContent = "";
+            currWord.pop();
+        }
+    }
+}
+
 function verifyGuess(e: KeyboardEvent) {
-    const div = document.getElementById("start-div"); 
-    const userGuess = document.getElementsByTagName("input").item(0);
-    if (e.key === "Enter" && userGuess !== null && div !== null) {
-        guess = userGuess.value.toString();
-        if (userGuess.value.length !== 5) {
+    const rowContainer = document.getElementsByClassName("row-container")[0].children;
+
+    if (rowContainer !== null) {
+        if (currWord.length < 5) {
             alert("The input box should have exactly 5 characters!");
         }
         else {
-            const newGuess = document.createElement("p");
-            const arrNewGuess = [...userGuess.value];
-            arrNewGuess.forEach((letter) => {
-               const l = document.createElement("span"); 
-               l.textContent = letter;
-               newGuess.appendChild(l);
-            });
-            div.appendChild(newGuess);
-            numberOfGuesses += 1;
-        
-            if (userGuess.value.toLowerCase() === wordToGuess.toLowerCase()) {
+            if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {
                 setTimeout(() => {
                     alert("You guessed the correct word!");
-                    userGuess.removeEventListener("keydown", verifyGuess);
-                }, 500);
+                    window.removeEventListener("keydown", verifyGuess);
+                }, 500); 
             }
             else if (numberOfGuesses === 6){
                 setTimeout(() => {
                     alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
-                    userGuess.removeEventListener("keydown", verifyGuess);
+                    window.removeEventListener("keydown", verifyGuess);
                 }, 500);
             }
-            userGuess.value = "";
-            revealHints(wordToGuess, guess, newGuess);
+            guess = currWord.join("");
+            revealHints();
+            numberOfGuesses += 1;
+            currWord = [];
         }
     }
 }
 
-function revealHints(wordToGuess: string, guess: string, para: HTMLParagraphElement) {
-    const paraArray = [...para.children];
-    const arrWordToGuess = [...wordToGuess];
+function revealHints() {
+    const rowContainer = document.getElementsByClassName("row-container")[0].children;
+    const currRow = rowContainer[numberOfGuesses];
+    const squares = [...currRow.children];
+
     for (let i=0; i<5; i++) {
         if (wordToGuess[i] == guess[i]) {
-            paraArray[i].classList.add("correct");
+            squares[i].classList.add("correct");
         }
-        else if (arrWordToGuess.includes(`${guess[i]}`)) {
-            paraArray[i].classList.add("misplaced");
+        else if (wordToGuess.includes(`${guess[i]}`)) {
+            squares[i].classList.add("misplaced");
         }
     }
 }
+
 startingConfig();

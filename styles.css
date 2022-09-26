@@ -1,3 +1,33 @@
+#start-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rows {
+    display: flex;
+    width: 350px;
+    height: 70px;
+    
+}
+.squares {
+    width: 70px;
+    height: 70px;
+    background-color: silver;
+    border: 1px solid grey;
+}
+
+.keyboard-row {
+    display: flex;
+    width: 500px;
+}
+
+.letter, .key {
+    width: 60px;
+    height: 50px;
+    border: 1px solid grey;
+}
+
 .correct {
     color: green;
 }
