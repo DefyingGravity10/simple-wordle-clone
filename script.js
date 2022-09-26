@@ -145,7 +145,6 @@ function verifyGuess() {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     if (rowContainer !== null) {
         if (currWord.length < 5) {
-            alert("The input box should have exactly 5 characters!");
         }
         else {
             if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {

@@ -159,7 +159,7 @@ function verifyGuess() {
 
     if (rowContainer !== null) {
         if (currWord.length < 5) {
-            alert("The input box should have exactly 5 characters!");
+            
         }
         else {
             if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {
