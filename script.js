@@ -51,6 +51,7 @@ function setMainScreen(wordToGuess) {
         const keyboard2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
         const keyboard3 = ["Backspace", "z", "x", "c", "v", "b", "n", "m", "Enter"];
         const keyboardContainer = document.createElement("div");
+        keyboardContainer.setAttribute("id", "keyboard-container");
         for (let i = 0; i < 3; i++) {
             const keyboardRow = document.createElement("div");
             if (i === 0) {
@@ -86,33 +87,50 @@ function setMainScreen(wordToGuess) {
         div.replaceChildren(rowContainer, keyboardContainer);
         //Obtain user guesses
         window.addEventListener("keydown", registerKey);
+        keyboardContainer.addEventListener("click", registerClick);
         console.log(wordToGuess);
-        //Try to ensure that e can be a click event :>
     }
 }
 function registerKey(e) {
     if (e.key.match(/[a-z]/i) && e.key !== "Enter" && e.key !== "Backspace") {
-        addLettersToScreen(e);
-    }
-    if (e.key === "Enter") {
-        verifyGuess(e);
+        addLettersToScreen(e.key);
     }
     if (e.key === "Backspace") {
-        deleteLetters(e);
+        deleteLetters();
+    }
+    if (e.key === "Enter") {
+        verifyGuess();
     }
 }
-function addLettersToScreen(e) {
+function registerClick(e) {
+    if (e !== null) {
+        const elem = e.target;
+        const key = elem.getAttribute("id");
+        if (key !== null) {
+            if (key.match(/[a-z]/i) && key !== "Enter" && key !== "Backspace") {
+                addLettersToScreen(key);
+            }
+            if (key === "Backspace") {
+                deleteLetters();
+            }
+            if (key === "Enter") {
+                verifyGuess();
+            }
+        }
+    }
+}
+function addLettersToScreen(key) {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     const currRow = rowContainer[numberOfGuesses];
     const squares = [...currRow.children];
     if (rowContainer !== null) {
         if (currWord.length < 5) {
-            squares[currWord.length].textContent = e.key;
-            currWord.push(e.key);
+            squares[currWord.length].textContent = key;
+            currWord.push(key);
         }
     }
 }
-function deleteLetters(e) {
+function deleteLetters() {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     const currRow = rowContainer[numberOfGuesses];
     const squares = [...currRow.children];
@@ -123,7 +141,7 @@ function deleteLetters(e) {
         }
     }
 }
-function verifyGuess(e) {
+function verifyGuess() {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     if (rowContainer !== null) {
         if (currWord.length < 5) {
@@ -133,13 +151,21 @@ function verifyGuess(e) {
             if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {
                 setTimeout(() => {
                     alert("You guessed the correct word!");
-                    window.removeEventListener("keydown", verifyGuess);
+                    window.removeEventListener("keydown", registerKey);
+                    const keyboardContainer = document.getElementById("keyboard-container");
+                    if (keyboardContainer !== null) {
+                        keyboardContainer.removeEventListener("click", registerClick);
+                    }
                 }, 500);
             }
-            else if (numberOfGuesses === 6) {
+            else if (numberOfGuesses === 5) {
                 setTimeout(() => {
                     alert(`Sorry, you lose. You already used up all 6 guesses.\nThe correct word is ${wordToGuess}!`);
-                    window.removeEventListener("keydown", verifyGuess);
+                    window.removeEventListener("keydown", registerKey);
+                    const keyboardContainer = document.getElementById("keyboard-container");
+                    if (keyboardContainer !== null) {
+                        keyboardContainer.removeEventListener("click", registerClick);
+                    }
                 }, 500);
             }
             guess = currWord.join("");
