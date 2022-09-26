@@ -40,7 +40,7 @@ function setMainScreen(wordToGuess) {
         for (let i = 0; i < 6; i++) {
             const row = document.createElement("div");
             for (let j = 0; j < 5; j++) {
-                const square = document.createElement("div");
+                const square = document.createElement("span");
                 square.classList.add("squares");
                 row.appendChild(square);
             }
@@ -88,7 +88,6 @@ function setMainScreen(wordToGuess) {
         //Obtain user guesses
         window.addEventListener("keydown", registerKey);
         keyboardContainer.addEventListener("click", registerClick);
-        console.log(wordToGuess);
     }
 }
 function registerKey(e) {
