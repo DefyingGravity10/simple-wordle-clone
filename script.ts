@@ -65,7 +65,7 @@ function setMainScreen(wordToGuess: string) {
             const keyboardRow = document.createElement("div");
             if (i===0) {
                 keyboard1.forEach((l) => {
-                    const letter = document.createElement("div");
+                    const letter = document.createElement("button");
                     letter.textContent = l;
                     letter.classList.add("key");
                     letter.setAttribute("id", l);
@@ -74,7 +74,7 @@ function setMainScreen(wordToGuess: string) {
             }
             if (i===1) {
                 keyboard2.forEach((l) => {
-                    const letter = document.createElement("div");
+                    const letter = document.createElement("button");
                     letter.textContent = l;
                     letter.classList.add("key");
                     letter.setAttribute("id", l);
@@ -83,7 +83,7 @@ function setMainScreen(wordToGuess: string) {
             }
             if (i===2) {
                 keyboard3.forEach((l) => {
-                    const letter = document.createElement("div");
+                    const letter = document.createElement("button");
                     letter.textContent = l;
                     letter.classList.add("key");
                     letter.setAttribute("id", l);
