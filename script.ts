@@ -206,13 +206,11 @@ function revealHints() {
         }
     });
     for (let i=0; i<5; i++) {
-        if (wordToGuess[i] == guess[i]) {
+        if (wordToGuess[i] == guess[i] && tally[guess[i]] > 0) {
             squares[i].classList.add("correct");
             tally[guess[i]] -= 1;
         }
-    }
-    for (let i=0; i<5; i++) {
-        if (wordToGuess.includes(`${guess[i]}`) && tally[guess[i]] > 0) {
+        else if (wordToGuess.includes(`${guess[i]}`) && tally[guess[i]] > 0) {
             squares[i].classList.add("misplaced");
             tally[guess[i]] -= 1;
         }
