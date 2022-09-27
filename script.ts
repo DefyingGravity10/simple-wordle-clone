@@ -21,7 +21,7 @@ function startingConfig() {
 
         submitButton.addEventListener("click", () => {
             if (textBox.value === "") {
-                alert("You placed an invalid input, please try again.");
+                alert("No URL specified, please try again.");
             }
             else {
                 let xhr = new XMLHttpRequest();
