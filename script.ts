@@ -210,11 +210,13 @@ function revealHints() {
             squares[i].classList.add("correct");
             tally[guess[i]] -= 1;
         }
-        else if (wordToGuess.includes(`${guess[i]}`) && tally[guess[i]] > 0) {
+    }
+    for (let i=0; i<5; i++) {
+        if (wordToGuess.includes(`${guess[i]}`) && tally[guess[i]] > 0 && !squares[i].classList.contains("correct")) {
             squares[i].classList.add("misplaced");
             tally[guess[i]] -= 1;
         }
-        else {
+        else if (!squares[i].classList.contains("correct")) {
             squares[i].classList.add("incorrect");
         }
     }
