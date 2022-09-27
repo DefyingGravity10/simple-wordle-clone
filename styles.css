@@ -56,15 +56,15 @@
 
 .correct {
     color: green;
-    background-color: rgb(230, 230, 230);
+    background-color: rgb(148, 214, 148);
 }
   
 .misplaced {
     color: darkgoldenrod;
-    background-color: rgb(230, 230, 230);
+    background-color: rgb(236, 216, 163);
 }
 
 .incorrect {
     color: grey;
-    background-color: rgb(230, 230, 230);
+    background-color: rgb(210, 210, 210);
 }
