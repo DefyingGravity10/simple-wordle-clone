@@ -1,14 +1,11 @@
-const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
-let numberOfGuesses = 0;
-let wordToGuess = "";
-let guess = "";
+let numberOfGuesses:number = 0;
+let wordToGuess:string = "";
 let currWord:string[] = [];
-const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
-                    "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-                    "u", "v", "w", "x", "y", "z"];
 
 function startingConfig() {
+    const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
     const div = document.getElementById("start-div");
+    
     if (div !== null) {
         const textBox = document.createElement("input");
         textBox.classList.add("text-input");
@@ -44,7 +41,8 @@ function setMainScreen(wordToGuess: string) {
     //Create new screen
     if (div !== null) {
         const rowContainer = document.createElement("div");
-        rowContainer.classList.add("row-container")
+        rowContainer.classList.add("row-container");
+
         for (let i=0; i<6; i++) {
             const row = document.createElement("div");
             for (let j=0; j<5; j++) {
@@ -55,40 +53,24 @@ function setMainScreen(wordToGuess: string) {
             row.classList.add("rows");
             rowContainer.appendChild(row);
         }
+
         const keyboard1 = ["q", "w", "e", "r", "t", "y", "u", "i","o", "p"];
         const keyboard2 = ["a", "s", "d", "f", "g", "h","j", "k", "l"];
         const keyboard3 = ["Backspace", "z", "x", "c", "v", "b", "n", "m", "Enter"];
 
         const keyboardContainer = document.createElement("div");
-        keyboardContainer.setAttribute("id","keyboard-container");
+        keyboardContainer.setAttribute("id", "keyboard-container");
+
         for (let i=0; i<3; i++) {
             const keyboardRow = document.createElement("div");
             if (i===0) {
-                keyboard1.forEach((l) => {
-                    const letter = document.createElement("button");
-                    letter.textContent = l;
-                    letter.classList.add("key");
-                    letter.setAttribute("id", l);
-                    keyboardRow.appendChild(letter);
-                });
+                createButton(keyboard1, keyboardRow);
             }
             if (i===1) {
-                keyboard2.forEach((l) => {
-                    const letter = document.createElement("button");
-                    letter.textContent = l;
-                    letter.classList.add("key");
-                    letter.setAttribute("id", l);
-                    keyboardRow.appendChild(letter);
-                });
+                createButton(keyboard2, keyboardRow);
             }
             if (i===2) {
-                keyboard3.forEach((l) => {
-                    const letter = document.createElement("button");
-                    letter.textContent = l;
-                    letter.classList.add("key");
-                    letter.setAttribute("id", l);
-                    keyboardRow.appendChild(letter);
-                });
+                createButton(keyboard3, keyboardRow);
             }
             keyboardRow.classList.add("keyboard-row");
             keyboardContainer.appendChild(keyboardRow);
@@ -101,7 +83,21 @@ function setMainScreen(wordToGuess: string) {
     }    
 }
 
+function createButton(keyboardN: string[], keyboardRow: HTMLElement) {
+    keyboardN.forEach((l) => {
+        const letter = document.createElement("button");
+        letter.textContent = l;
+        letter.classList.add("key");
+        letter.setAttribute("id", l);
+        keyboardRow.appendChild(letter);
+    });
+}
+
 function registerKey(e: KeyboardEvent) {
+    const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
+                    "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                    "u", "v", "w", "x", "y", "z"];
+
     if (letterArr.includes(e.key.toLowerCase())) {
         addLettersToScreen(e.key.toLowerCase());
     }
@@ -114,9 +110,14 @@ function registerKey(e: KeyboardEvent) {
 }
 
 function registerClick(e: MouseEvent) {
+    const letterArr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
+                    "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                    "u", "v", "w", "x", "y", "z"];
+
     if (e !== null) {
         const elem = e.target as Element;
         const key = elem.getAttribute("id");
+
         if (key !== null) {
             if (letterArr.includes(key)) {
                 addLettersToScreen(key);
@@ -136,11 +137,9 @@ function addLettersToScreen(key:string) {
     const currRow = rowContainer[numberOfGuesses];
     const squares = [...currRow.children];
 
-    if (rowContainer !== null) {
-        if (currWord.length < 5) {
-            squares[currWord.length].textContent = key;
-            currWord.push(key);
-        }   
+    if (rowContainer !== null && currWord.length < 5) {
+        squares[currWord.length].textContent = key;
+        currWord.push(key);     
     }
 }
 
@@ -149,11 +148,9 @@ function deleteLetters() {
     const currRow = rowContainer[numberOfGuesses];
     const squares = [...currRow.children];
 
-    if (rowContainer !== null) {
-        if (currWord.length > 0) {
-            squares[currWord.length-1].textContent = "";
-            currWord.pop();
-        }
+    if (rowContainer !== null && currWord.length > 0) {
+        squares[currWord.length-1].textContent = "";
+        currWord.pop();
     }
 }
 
@@ -161,8 +158,7 @@ function verifyGuess() {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
 
     if (rowContainer !== null) {
-        if (currWord.length < 5) {
-            
+        if (currWord.length < 5) {//do nothing
         }
         else {
             if (currWord.join("").toLowerCase() === wordToGuess.toLowerCase()) {
@@ -185,26 +181,27 @@ function verifyGuess() {
                     } 
                 }, 500);
             }
-            guess = currWord.join("");
-            revealHints();
+
+            revealHints(currWord.join(""));
             numberOfGuesses += 1;
             currWord = [];
         }
     }
 }
 
-function revealHints() {
+function revealHints(guess:string) {
     const rowContainer = document.getElementsByClassName("row-container")[0].children;
     const currRow = rowContainer[numberOfGuesses];
     const squares = [...currRow.children];
     const tally: Record<string, number> = {a:0, b:0, c:0, d:0, e:0, f:0, g:0, h:0, i:0, j:0, k:0, l:0, m:0,
-                   n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
+                                           n:0, o:0, p:0, q:0, r:0, s:0, t:0, u:0, v:0, w:0, x:0, y:0, z:0};
 
     Array.from(wordToGuess).forEach((letter) => {
         if (letter in tally) {
             tally[letter] += 1;
         }
     });
+
     for (let i=0; i<5; i++) {
         if (wordToGuess[i] == guess[i] && tally[guess[i]] > 0) {
             squares[i].classList.add("correct");
