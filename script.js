@@ -2,16 +2,21 @@
 let numberOfGuesses = 0;
 let wordToGuess = "";
 let currWord = [];
-function startingConfig() {
+// Omitted
+/* function startingConfig() {
     const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
     const div = document.getElementById("start-div");
+    
     if (div !== null) {
         const textBox = document.createElement("input");
         textBox.classList.add("text-input");
+
         const submitButton = document.createElement("button");
         submitButton.classList.add("submit-btn");
         submitButton.textContent = "Submit";
+
         div.replaceChildren(textBox, submitButton);
+
         submitButton.addEventListener("click", () => {
             if (textBox.value === "") {
                 alert("No URL specified, please try again.");
@@ -19,9 +24,9 @@ function startingConfig() {
             else {
                 let xhr = new XMLHttpRequest();
                 xhr.open("GET", url, true);
-                xhr.onload = function () {
+                xhr.onload = function() {
                     const arr = xhr.responseText.split('\n');
-                    const randomNumber = Math.floor(Math.random() * arr.length);
+                    const randomNumber: number = Math.floor(Math.random() * arr.length);
                     wordToGuess = arr[randomNumber];
                     setMainScreen(wordToGuess);
                 };
@@ -29,6 +34,18 @@ function startingConfig() {
             }
         });
     }
+} */
+function fetchWord() {
+    const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onload = function () {
+        const arr = xhr.responseText.split('\n');
+        const randomNumber = Math.floor(Math.random() * arr.length);
+        wordToGuess = arr[randomNumber];
+        setMainScreen(wordToGuess);
+    };
+    xhr.send();
 }
 function setMainScreen(wordToGuess) {
     const div = document.getElementById("start-div");
@@ -191,4 +208,4 @@ function revealHints(guess) {
         }
     }
 }
-startingConfig();
+fetchWord();

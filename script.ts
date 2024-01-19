@@ -2,7 +2,8 @@ let numberOfGuesses:number = 0;
 let wordToGuess:string = "";
 let currWord:string[] = [];
 
-function startingConfig() {
+// Omitted
+/* function startingConfig() {
     const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
     const div = document.getElementById("start-div");
     
@@ -33,6 +34,19 @@ function startingConfig() {
             }
         });
     } 
+} */
+
+function fetchWord() {
+    const url = "https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/ca9018b32e963292473841fb55fd5a62176769b5/valid-wordle-words.txt";
+    let xhr = new XMLHttpRequest();
+                xhr.open("GET", url, true);
+                xhr.onload = function() {
+                    const arr = xhr.responseText.split('\n');
+                    const randomNumber: number = Math.floor(Math.random() * arr.length); 
+                    wordToGuess = arr[randomNumber];
+                    setMainScreen(wordToGuess);
+                };
+                xhr.send();
 }
 
 function setMainScreen(wordToGuess: string) {
@@ -219,4 +233,4 @@ function revealHints(guess:string) {
     }
 }
 
-startingConfig();
+fetchWord();
