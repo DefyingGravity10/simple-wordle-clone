@@ -5,4 +5,4 @@ This project is a simple Wordle clone created with HTML, CSS and Typescript (tra
 <!--of the Department of Computer Science in the University of the Philippines - Diliman during the First Semester of A.Y. 2022-2023. -->
 <br>
 <h2><strong>Running the Project</strong></h2>
-See the project from this <a href="https://defyinggravity10.github.io/simple-wordle-clone/">link</a>. Then, place <em>anything</em> at the text box and press submit.
+See the project from this <a href="https://defyinggravity10.github.io/simple-wordle-clone/">link</a>.
